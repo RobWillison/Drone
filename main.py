@@ -30,7 +30,7 @@ def filterAccel():
 def pitch():
   Xg, Yg, Zg = filterAccel()
 
-  pitch = math.atan2(Xg, math.sqrt(fYg**2 + fZg**2))
+  pitch = math.atan2(Xg, math.sqrt(Yg**2 + Zg**2))
 
   return math.degrees(pitch)
 
