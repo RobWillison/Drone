@@ -27,7 +27,7 @@ def pitch():
   acc_y_norm = acc_y / acc_norm_div
 
   # Calc pitch and roll using trig
-  pitch = math.asin(acc_x_norm)
+  pitch = math.degrees(math.asin(acc_x_norm))
 
   return pitch
 
@@ -45,7 +45,7 @@ def roll():
 
   # Calc pitch and roll using trig#
   pitch = math.asin(acc_x_norm)
-  roll = - math.asin(math.radians(acc_y_norm / math.cos(pitch)))
+  roll = math.degrees(- math.asin(math.radians(acc_y_norm / math.cos(pitch))))
 
   return roll
 
