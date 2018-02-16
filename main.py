@@ -72,8 +72,9 @@ while(True):
   rearPower = totalPower * (1 - pitchBias)
 
   frontLeftMotor.value = frontPower * rollBias
+  print('front left :', frontLeftMotor.value)
   frontRightMotor.value = frontPower * (1 - rollBias)
-
+  print('front right :', frontLeftMotor.value)
   rearLeftMotor.value = rearPower * rollBias
   rearRightMotor.value = rearPower * (1 - rollBias)
 
