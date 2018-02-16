@@ -58,6 +58,11 @@ def getPitchBias():
 
   return bias
 
+def setMotor(motor, value):
+  if value >= 1:
+      value = 1
+  motor.value = value
+
 totalPower = 0.1
 rollCalibration = 0
 pitchCalibration = 0
@@ -70,11 +75,13 @@ while(True):
   frontPower = totalPower * (1 - pitchBias)
   rearPower = totalPower * pitchBias
   print(frontPower, rearPower)
-  frontLeftMotor.value = frontPower * rollBias
-  frontRightMotor.value = frontPower * (1 - rollBias)
 
-  rearLeftMotor.value = rearPower * rollBias
-  rearRightMotor.value = rearPower * (1 - rollBias)
+
+  setMotor(frontLeftMotor, frontPower * rollBias)
+  setMotor(frontRightMotor, frontPower * (1 - rollBias))
+
+  setMotor(rearLeftMotor, rearPower * rollBias)
+  setMotor(rearRightMotor, rearPower * (1 - rollBias))
 
   sleep(0.05)
 
