@@ -14,40 +14,33 @@ motor4_enable = OutputDevice(25, initial_value=1)
 
 imu = Adafruit_LSM9DS0.LSM9DS0()
 
+fXg = 0
+fYg = 0
+fZg = 0
+alpha = 0
+
+def filterAccel():
+    (Xg, Yg, Zg) = imu.readAccel()
+    fXg = Xg * alpha + (fXg * (1 - alpha))
+    fYg = Yg * alpha + (fYg * (1 - alpha))
+    fzg = zg * alpha + (fzg * (1 - alpha))
+
+    return fXg, fYg, fZg
+
 def pitch():
-  (mag_x, mag_y, mag_z) = imu.readMag()
-  (acc_x, acc_y, acc_z) = imu.readAccel()
+  Xg, Yg, Zg = filterAccel()
 
-  # Normalising the accelerometer data
-  # Dividing variable (don't know why I use this)
-  acc_norm_div = math.sqrt(acc_x**2 + acc_y**2 + acc_z**2)
+  pitch = math.atan2(Xg, math.sqrt(fYg**2 + fZg**2))
 
-  # Normalised values
-  acc_x_norm = acc_x / acc_norm_div
-  acc_y_norm = acc_y / acc_norm_div
-
-  # Calc pitch and roll using trig
-  pitch = math.degrees(math.asin(acc_x_norm))
-
-  return pitch
+  return math.degrees(pitch)
 
 def roll():
-  (mag_x, mag_y, mag_z) = imu.readMag()
-  (acc_x, acc_y, acc_z) = imu.readAccel()
+  Xg, Yg, Zg = filterAccel()
 
-  # Normalising the accelerometer data
-  # Dividing variable (don't know why I use this)
-  acc_norm_div = math.sqrt(acc_x**2 + acc_y**2 + acc_z**2)
+  roll = math.atan2(-Yg, Zg)
 
-  # Normalised values
-  acc_x_norm = acc_x / acc_norm_div
-  acc_y_norm = acc_y / acc_norm_div
+  return math.degrees(roll)
 
-  # Calc pitch and roll using trig#
-  pitch = math.asin(acc_x_norm)
-  roll = math.degrees(- math.asin(math.radians(acc_y_norm / math.cos(pitch))))
-
-  return roll
 
 def getRollBias():
   rollAngle = roll() - rollCalibration
