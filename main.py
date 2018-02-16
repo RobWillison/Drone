@@ -57,7 +57,7 @@ def getRollBias():
 
 def getPitchBias():
   pitchAngle = pitch() - pitchCalibration
-  bias = (rollAngle / 180) + 0.5
+  bias = (pitchAngle / 180) + 0.5
 
   return bias
 
