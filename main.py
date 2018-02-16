@@ -17,16 +17,17 @@ imu = Adafruit_LSM9DS0.LSM9DS0()
 fXg = 0
 fYg = 0
 fZg = 0
-alpha = 0
+alpha = 0.5
 
 def filterAccel():
   global fXg
   global fYg
   global fZg
   (Xg, Yg, Zg) = imu.readAccel()
+
   fXg = Xg * alpha + (fXg * (1 - alpha))
   fYg = Yg * alpha + (fYg * (1 - alpha))
-  fzg = zg * alpha + (fzg * (1 - alpha))
+  fZg = Zg * alpha + (fZg * (1 - alpha))
 
   return fXg, fYg, fZg
 
@@ -34,15 +35,15 @@ def pitch():
   Xg, Yg, Zg = filterAccel()
 
   pitch = math.atan2(Xg, math.sqrt(Yg**2 + Zg**2))
-
-  return math.degrees(pitch)
+  global pitchCalibration
+  return math.degrees(pitch) - pitchCalibration
 
 def roll():
   Xg, Yg, Zg = filterAccel()
 
   roll = math.atan2(-Yg, Zg)
-
-  return math.degrees(roll)
+  global rollCalibration
+  return math.degrees(roll) - rollCalibration
 
 
 def getRollBias():
@@ -58,22 +59,24 @@ def getPitchBias():
   return bias
 
 totalPower = 0.1
+rollCalibration = 0
+pitchCalibration = 0
 rollCalibration = roll()
 pitchCalibration = pitch()
 
 while(True):
-  pitchBias = getPitchBias()
-  rollBias = getRollBias()
-  frontPower = totalPower * pitchBias
-  rearPower = totalPower * (1 - pitchBias)
-
-  frontLeftMotor.value = frontPower * rollBias
-  print('front left :', frontLeftMotor.value)
-  frontRightMotor.value = frontPower * (1 - rollBias)
-  print('front right :', frontLeftMotor.value)
-  rearLeftMotor.value = rearPower * rollBias
-  rearRightMotor.value = rearPower * (1 - rollBias)
-
+  # pitchBias = getPitchBias()
+  # rollBias = getRollBias()
+  # frontPower = totalPower * pitchBias
+  # rearPower = totalPower * (1 - pitchBias)
+  #
+  # frontLeftMotor.value = frontPower * rollBias
+  # print('front left :', frontLeftMotor.value)
+  # frontRightMotor.value = frontPower * (1 - rollBias)
+  # print('front right :', frontLeftMotor.value)
+  # rearLeftMotor.value = rearPower * rollBias
+  # rearRightMotor.value = rearPower * (1 - rollBias)
+  print(roll())
   sleep(0.05)
 
 
