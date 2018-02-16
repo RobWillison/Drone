@@ -47,13 +47,13 @@ def roll():
 
 
 def getRollBias():
-  rollAngle = roll() - rollCalibration
+  rollAngle = roll()
   bias = (rollAngle / 180) + 0.5
 
   return bias
 
 def getPitchBias():
-  pitchAngle = pitch() - pitchCalibration
+  pitchAngle = pitch()
   bias = (pitchAngle / 180) + 0.5
 
   return bias
@@ -67,13 +67,12 @@ pitchCalibration = pitch()
 while(True):
   pitchBias = getPitchBias()
   rollBias = getRollBias()
-  frontPower = totalPower * pitchBias
-  rearPower = totalPower * (1 - pitchBias)
-
+  frontPower = totalPower * (1 - pitchBias)
+  rearPower = totalPower * pitchBias
+  print(frontPower, rearPower)
   frontLeftMotor.value = frontPower * rollBias
-  print('front left :', frontLeftMotor.value)
   frontRightMotor.value = frontPower * (1 - rollBias)
-  print('front right :', frontLeftMotor.value)
+
   rearLeftMotor.value = rearPower * rollBias
   rearRightMotor.value = rearPower * (1 - rollBias)
 
