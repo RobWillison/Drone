@@ -1,6 +1,7 @@
 import Adafruit_LSM9DS0
 from gpiozero import Motor, OutputDevice
 from time import sleep
+import math
 
 rearRightMotor = Motor(27, 24)
 motor1_enable = OutputDevice(5, initial_value=1)
@@ -10,6 +11,8 @@ frontLeftMotor = Motor(23, 16)
 motor3_enable = OutputDevice(12, initial_value=1)
 frontRightMotor = Motor(13, 18)
 motor4_enable = OutputDevice(25, initial_value=1)
+
+imu = Adafruit_LSM9DS0.LSM9DS0()
 
 def pitch():
   (mag_x, mag_y, mag_z) = imu.readMag()
