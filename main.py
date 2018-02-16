@@ -20,12 +20,12 @@ fZg = 0
 alpha = 0
 
 def filterAccel():
-    (Xg, Yg, Zg) = imu.readAccel()
-    fXg = Xg * alpha + (fXg * (1 - alpha))
-    fYg = Yg * alpha + (fYg * (1 - alpha))
-    fzg = zg * alpha + (fzg * (1 - alpha))
+  (Xg, Yg, Zg) = imu.readAccel()
+  fXg = Xg * alpha + (fXg * (1 - alpha))
+  fYg = Yg * alpha + (fYg * (1 - alpha))
+  fzg = zg * alpha + (fzg * (1 - alpha))
 
-    return fXg, fYg, fZg
+  return fXg, fYg, fZg
 
 def pitch():
   Xg, Yg, Zg = filterAccel()
