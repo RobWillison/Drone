@@ -65,18 +65,18 @@ rollCalibration = roll()
 pitchCalibration = pitch()
 
 while(True):
-  # pitchBias = getPitchBias()
-  # rollBias = getRollBias()
-  # frontPower = totalPower * pitchBias
-  # rearPower = totalPower * (1 - pitchBias)
-  #
-  # frontLeftMotor.value = frontPower * rollBias
-  # print('front left :', frontLeftMotor.value)
-  # frontRightMotor.value = frontPower * (1 - rollBias)
-  # print('front right :', frontLeftMotor.value)
-  # rearLeftMotor.value = rearPower * rollBias
-  # rearRightMotor.value = rearPower * (1 - rollBias)
-  print(roll())
+  pitchBias = getPitchBias()
+  rollBias = getRollBias()
+  frontPower = totalPower * pitchBias
+  rearPower = totalPower * (1 - pitchBias)
+
+  frontLeftMotor.value = frontPower * rollBias
+  print('front left :', frontLeftMotor.value)
+  frontRightMotor.value = frontPower * (1 - rollBias)
+  print('front right :', frontLeftMotor.value)
+  rearLeftMotor.value = rearPower * rollBias
+  rearRightMotor.value = rearPower * (1 - rollBias)
+
   sleep(0.05)
 
 
