@@ -20,6 +20,9 @@ fZg = 0
 alpha = 0
 
 def filterAccel():
+  global fXg
+  global fYg
+  global fZg
   (Xg, Yg, Zg) = imu.readAccel()
   fXg = Xg * alpha + (fXg * (1 - alpha))
   fYg = Yg * alpha + (fYg * (1 - alpha))
