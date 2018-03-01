@@ -60,8 +60,14 @@ def getPitchBias():
 
     return pitchPID.output
 
+def getRollBias():
+    error = roll()
+    rollPID.update(error)
 
-totalPower = 0.1
+    return rollPID.output
+
+
+throttle = 0.1
 rollCalibration = 0
 pitchCalibration = 0
 rollCalibration = roll()
@@ -71,20 +77,21 @@ pitchPID = PID.PID(0.01, 0.01, 0.01)
 pitchPID.SetPoint=0.0
 pitchPID.setSampleTime(0.0001)
 
-frontThrottle = totalPower / 2
-rearThrottle = totalPower / 2
+rollPID = PID.PID(0.01, 0.01, 0.01)
+rollPID.SetPoint=0.0
+rollPID.setSampleTime(0.0001)
 
 while(True):
-  frontPower = frontThrottle + getPitchBias() * 0.01
-  rearPower = rearThrottle - getPitchBias() * 0.01
+  frontAdjust = getPitchBias() * 0.01
+  rearAdjust = - getPitchBias() * 0.01
 
-  print(frontPower, rearPower)
+  leftAdjust = getRollBias() * 0.01
+  rightAdjust = - getRollBias() * 0.01
 
+  setMotor(frontLeftMotor, throttle + frontAdjust + leftAdjust)
+  setMotor(frontRightMotor, throttle + frontAdjust + rightAdjust)
 
-  setMotor(frontLeftMotor, frontPower)
-  setMotor(frontRightMotor, frontPower)
-
-  setMotor(rearLeftMotor, rearPower)
-  setMotor(rearRightMotor, rearPower)
+  setMotor(rearLeftMotor, throttle + rearAdjust + leftAdjust)
+  setMotor(rearRightMotor, throttle + rearAdjust + rightAdjust)
 
   sleep(0.0001)
