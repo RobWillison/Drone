@@ -67,16 +67,16 @@ pitchCalibration = 0
 rollCalibration = roll()
 pitchCalibration = pitch()
 
-pitchPID = PID.PID(0.01, 0, 0)
+pitchPID = PID.PID(0.01, 0.01, 0.01)
 pitchPID.SetPoint=0.0
 pitchPID.setSampleTime(0.0001)
 
-frontPower = totalPower / 2
-rearPower = totalPower / 2
+frontThrottle = totalPower / 2
+rearThrottle = totalPower / 2
 
 while(True):
-  frontPower += getPitchBias() * 0.01
-  rearPower -= getPitchBias() * 0.01
+  frontPower = frontThrottle + getPitchBias() * 0.01
+  rearPower = rearThrottle - getPitchBias() * 0.01
 
   print(frontPower, rearPower)
 
