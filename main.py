@@ -51,9 +51,10 @@ def setMotor(motor, value):
       value = 1
   motor.value = value
 
-def getPitchBias():
+def getPitchBias(currentBias):
     error = pitch()
     pitchPID.update(error)
+
     return pitchPID.output
 
 
@@ -67,20 +68,20 @@ pitchPID = PID.PID(0.2, 0, 0)
 pitchPID.SetPoint=0.0
 pitchPID.setSampleTime(0.01)
 
+pitchBias = 0.5
+
 while(True):
-  pitchBias = getPitchBias()
-  print(pitchBias)
-  # rollBias = 0.5
-  #
-  # frontPower = totalPower * (1 - pitchBias)
-  # rearPower = totalPower * pitchBias
-  # print(frontPower, rearPower)
-  #
-  #
-  # setMotor(frontLeftMotor, frontPower * rollBias)
-  # setMotor(frontRightMotor, frontPower * (1 - rollBias))
-  #
-  # setMotor(rearLeftMotor, rearPower * rollBias)
-  # setMotor(rearRightMotor, rearPower * (1 - rollBias))
+  pitchBias += getPitchBias() * 0.1
+  frontPower = totalPower * pitchBias
+  rearPower = totalPower * (1 - pitchBias)
+
+  print(frontPower, rearPower)
+
+
+  setMotor(frontLeftMotor, frontPower)
+  setMotor(frontRightMotor, frontPower)
+
+  setMotor(rearLeftMotor, rearPower)
+  setMotor(rearRightMotor, rearPower)
 
   sleep(0.01)
