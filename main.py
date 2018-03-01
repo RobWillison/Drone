@@ -47,7 +47,7 @@ def roll():
   return math.degrees(roll) - rollCalibration
 
 def setMotor(motor, value):
-  if value >= 0:
+  if value <= 0:
     value = 0
 
   if value >= 1:
