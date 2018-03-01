@@ -2,6 +2,7 @@ import Adafruit_LSM9DS0
 from gpiozero import Motor, OutputDevice
 from time import sleep
 import math
+import PID
 
 rearRightMotor = Motor(27, 24)
 motor1_enable = OutputDevice(5, initial_value=1)
@@ -45,23 +46,16 @@ def roll():
   global rollCalibration
   return math.degrees(roll) - rollCalibration
 
-
-def getRollBias():
-  rollAngle = roll()
-  bias = (rollAngle / 180) + 0.5
-
-  return bias
-
-def getPitchBias():
-  pitchAngle = pitch()
-  bias = (pitchAngle / 180) + 0.5
-
-  return bias
-
 def setMotor(motor, value):
   if value >= 1:
       value = 1
   motor.value = value
+
+def getPitchBias():
+    error = pitch()
+    pitchPID.pdate(error)
+    return pitchPID.output
+
 
 totalPower = 0.1
 rollCalibration = 0
@@ -69,21 +63,24 @@ pitchCalibration = 0
 rollCalibration = roll()
 pitchCalibration = pitch()
 
+pitchPID = PID.PID(0.2, 0, 0)
+pitchPID.SetPoint=0.0
+pitchPID.setSampleTime(0.01)
+
 while(True):
   pitchBias = getPitchBias()
-  rollBias = getRollBias()
-  frontPower = totalPower * (1 - pitchBias)
-  rearPower = totalPower * pitchBias
-  print(frontPower, rearPower)
+  print(pitchBias)
+  # rollBias = 0.5
+  #
+  # frontPower = totalPower * (1 - pitchBias)
+  # rearPower = totalPower * pitchBias
+  # print(frontPower, rearPower)
+  #
+  #
+  # setMotor(frontLeftMotor, frontPower * rollBias)
+  # setMotor(frontRightMotor, frontPower * (1 - rollBias))
+  #
+  # setMotor(rearLeftMotor, rearPower * rollBias)
+  # setMotor(rearRightMotor, rearPower * (1 - rollBias))
 
-
-  setMotor(frontLeftMotor, frontPower * rollBias)
-  setMotor(frontRightMotor, frontPower * (1 - rollBias))
-
-  setMotor(rearLeftMotor, rearPower * rollBias)
-  setMotor(rearRightMotor, rearPower * (1 - rollBias))
-
-  sleep(0.05)
-
-
-
+  sleep(0.01)
