@@ -53,7 +53,7 @@ def setMotor(motor, value):
 
 def getPitchBias():
     error = pitch()
-    pitchPID.pdate(error)
+    pitchPID.update(error)
     return pitchPID.output
 
 
