@@ -49,7 +49,7 @@ def roll():
 def setMotor(motor, value):
   if value >= 0:
     value = 0
-    
+
   if value >= 1:
       value = 1
   motor.value = value
@@ -71,12 +71,12 @@ pitchPID = PID.PID(0.2, 0, 0)
 pitchPID.SetPoint=0.0
 pitchPID.setSampleTime(0.01)
 
-pitchBias = 0.5
+frontPower = totalPower / 2
+rearPower = totalPower / 2
 
 while(True):
-  pitchBias += getPitchBias() * 0.01
-  frontPower = totalPower * pitchBias
-  rearPower = totalPower * (1 - pitchBias)
+  frontPower += getPitchBias() * 0.01
+  rearPower -= getPitchBias() * 0.01
 
   print(frontPower, rearPower)
 
