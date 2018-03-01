@@ -47,6 +47,9 @@ def roll():
   return math.degrees(roll) - rollCalibration
 
 def setMotor(motor, value):
+  if value >= 0:
+    value = 0
+    
   if value >= 1:
       value = 1
   motor.value = value
@@ -71,7 +74,7 @@ pitchPID.setSampleTime(0.01)
 pitchBias = 0.5
 
 while(True):
-  pitchBias += getPitchBias() * 0.1
+  pitchBias += getPitchBias() * 0.01
   frontPower = totalPower * pitchBias
   rearPower = totalPower * (1 - pitchBias)
 
