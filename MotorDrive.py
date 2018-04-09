@@ -11,7 +11,7 @@ MAX = 1664
 MIN = 836
 
 def getBus():
-    smbus.SMBus(1)
+    return smbus.SMBus(1)
 
 def setup():
     bus = getBus()
