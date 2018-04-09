@@ -25,5 +25,6 @@ def setup():
 
 # Value is between 0 and 100
 def setMotorValue(motor, value):
+    bus = getBus()
     value = MIN + (value / 100.0) * (MAX - MIN)
     bus.write_word_data(I2C_ADDR, motor, value)
