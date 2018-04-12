@@ -1,16 +1,14 @@
 import Adafruit_LSM9DS0
-from gpiozero import Motor, OutputDevice
+import MotorDrive
 from time import sleep
 import math
 
-rearRightMotor = Motor(27, 24)
-motor1_enable = OutputDevice(5, initial_value=1)
-rearLeftMotor = Motor(6, 22)
-motor2_enable = OutputDevice(17, initial_value=1)
-frontLeftMotor = Motor(23, 16)
-motor3_enable = OutputDevice(12, initial_value=1)
-frontRightMotor = Motor(13, 18)
-motor4_enable = OutputDevice(25, initial_value=1)
+MotorDrive.setup()
+
+mFrontLeft = MotorDrive.MOTOR1
+mFrontRight = MotorDrive.MOTOR2
+mBackLeft = MotorDrive.MOTOR3
+mBackRight = MotorDrive.MOTOR4
 
 imu = Adafruit_LSM9DS0.LSM9DS0()
 
@@ -77,11 +75,11 @@ while(True):
   print(frontPower, rearPower)
 
 
-  setMotor(frontLeftMotor, frontPower * rollBias)
-  setMotor(frontRightMotor, frontPower * (1 - rollBias))
+  MotorDrive.setMotorValue(mFrontLeft, frontPower * rollBias)
+  setMotor(mFrontRight, frontPower * (1 - rollBias))
 
-  setMotor(rearLeftMotor, rearPower * rollBias)
-  setMotor(rearRightMotor, rearPower * (1 - rollBias))
+  setMotor(mBackLeft, rearPower * rollBias)
+  setMotor(mBackRight, rearPower * (1 - rollBias))
 
   sleep(0.05)
 
