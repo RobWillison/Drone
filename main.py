@@ -2,6 +2,7 @@ import Adafruit_LSM9DS0
 import MotorDrive
 from time import sleep
 import math
+import PID
 
 MotorDrive.setup()
 
@@ -43,45 +44,52 @@ def roll():
   global rollCalibration
   return math.degrees(roll) - rollCalibration
 
-
-def getRollBias():
-  rollAngle = roll()
-  bias = (rollAngle / 180) + 0.5
-
-  return bias
-
-def getPitchBias():
-  pitchAngle = pitch()
-  bias = (pitchAngle / 180) + 0.5
-
-  return bias
-
 def setMotor(motor, value):
+  if value <= 0:
+    value = 0
+
   if value >= 1:
       value = 1
   motor.value = value
 
-totalPower = 0.1
+def getPitchBias():
+    error = pitch()
+    pitchPID.update(error)
+
+    return pitchPID.output
+
+def getRollBias():
+    error = roll()
+    rollPID.update(error)
+
+    return rollPID.output
+
+
+throttle = 0.1
 rollCalibration = 0
 pitchCalibration = 0
 rollCalibration = roll()
 pitchCalibration = pitch()
 
+pitchPID = PID.PID(0.01, 0.01, 0.01)
+pitchPID.SetPoint=0.0
+pitchPID.setSampleTime(0.0001)
+
+rollPID = PID.PID(0.01, 0.01, 0.01)
+rollPID.SetPoint=0.0
+rollPID.setSampleTime(0.0001)
+
 while(True):
-  pitchBias = getPitchBias()
-  rollBias = getRollBias()
-  frontPower = totalPower * (1 - pitchBias)
-  rearPower = totalPower * pitchBias
-  print(frontPower, rearPower)
+  frontAdjust = getPitchBias() * 0.01
+  rearAdjust = - getPitchBias() * 0.01
 
+  leftAdjust = getRollBias() * 0.01
+  rightAdjust = - getRollBias() * 0.01
 
-  MotorDrive.setMotorValue(mFrontLeft, frontPower * rollBias)
-  setMotor(mFrontRight, frontPower * (1 - rollBias))
+  MotorDrive.setMotorValue(mFrontLeft, throttle + frontAdjust + leftAdjust)
+  MotorDrive.setMotorValue(mFrontRight, throttle + frontAdjust + rightAdjust)
 
-  setMotor(mBackLeft, rearPower * rollBias)
-  setMotor(mBackRight, rearPower * (1 - rollBias))
+  MotorDrive.setMotorValue(mRearLeft, throttle + rearAdjust + leftAdjust)
+  sMotorDrive.setMotorValue(mRearRight, throttle + rearAdjust + rightAdjust)
 
-  sleep(0.05)
-
-
-
+  sleep(0.0001)
