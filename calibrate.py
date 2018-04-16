@@ -9,11 +9,11 @@ mBackLeft = MotorDrive.MOTOR3
 mBackRight = MotorDrive.MOTOR4
 
 def calibrate(motor):
-    setMotorValue(motor, 0)
+    MotorDrive.setMotorValue(motor, 0)
     sleep(2)
-    setMotorValue(motor, 100)
+    MotorDrive.setMotorValue(motor, 100)
     sleep(2)
-    setMotorValue(motor, 0)
+    MotorDrive.setMotorValue(motor, 0)
 
 calibrate(mFrontRight)
 calibrate(mFrontLeft)
