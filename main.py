@@ -89,7 +89,7 @@ while(True):
   MotorDrive.setMotorValue(mFrontLeft, throttle + frontAdjust + leftAdjust)
   MotorDrive.setMotorValue(mFrontRight, throttle + frontAdjust + rightAdjust)
 
-  MotorDrive.setMotorValue(mRearLeft, throttle + rearAdjust + leftAdjust)
-  sMotorDrive.setMotorValue(mRearRight, throttle + rearAdjust + rightAdjust)
+  MotorDrive.setMotorValue(mBackLeft, throttle + rearAdjust + leftAdjust)
+  sMotorDrive.setMotorValue(mBackRight, throttle + rearAdjust + rightAdjust)
 
   sleep(0.0001)
