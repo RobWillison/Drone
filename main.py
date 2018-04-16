@@ -65,7 +65,7 @@ def getRollBias():
     return rollPID.output
 
 
-throttle = 0.1
+throttle = 50
 rollCalibration = 0
 pitchCalibration = 0
 rollCalibration = roll()
