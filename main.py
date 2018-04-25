@@ -82,14 +82,14 @@ rollPID.setSampleTime(0.0001)
 while(True):
   frontAdjust = getPitchBias() * 0.01
   rearAdjust = - getPitchBias() * 0.01
+  print(frontAdjust, rearAdjust)
+  # leftAdjust = getRollBias() * 0.01
+  # rightAdjust = - getRollBias() * 0.01
 
-  leftAdjust = getRollBias() * 0.01
-  rightAdjust = - getRollBias() * 0.01
-
-  MotorDrive.setMotorValue(mFrontLeft, throttle + frontAdjust + leftAdjust)
-  MotorDrive.setMotorValue(mFrontRight, throttle + frontAdjust + rightAdjust)
-
-  MotorDrive.setMotorValue(mBackLeft, throttle + rearAdjust + leftAdjust)
-  MotorDrive.setMotorValue(mBackRight, throttle + rearAdjust + rightAdjust)
+  # MotorDrive.setMotorValue(mFrontLeft, throttle + frontAdjust + leftAdjust)
+  # MotorDrive.setMotorValue(mFrontRight, throttle + frontAdjust + rightAdjust)
+  #
+  # MotorDrive.setMotorValue(mBackLeft, throttle + rearAdjust + leftAdjust)
+  # MotorDrive.setMotorValue(mBackRight, throttle + rearAdjust + rightAdjust)
 
   sleep(0.0001)
