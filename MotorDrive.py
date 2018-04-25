@@ -28,3 +28,15 @@ def setMotorValue(motor, value):
     bus = getBus()
     value = MIN + (value / 100.0) * (MAX - MIN)
     bus.write_word_data(I2C_ADDR, motor, int(value))
+
+def motor1(value):
+    setMotorValue(MOTOR1, value)
+
+def motor2(value):
+    setMotorValue(MOTOR2, value)
+
+def motor3(value):
+    setMotorValue(MOTOR3, value)
+
+def motor4(value):
+    setMotorValue(MOTOR4, value)
