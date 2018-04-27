@@ -17,7 +17,8 @@ mBackRight = MotorDrive.MOTOR4
 
 def getMotorValue(motor):
     value = redisClient.get('motor-' + motor)
-    return 0 if value == None
+    if value == None:
+        return 0
     return int(value)
 
 while True:
