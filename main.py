@@ -79,8 +79,8 @@ rollPID.SetPoint=0.0
 rollPID.setSampleTime(0.0001)
 
 while(True):
-  frontAdjust = getPitchBias() * 0.01
-  rearAdjust = - getPitchBias() * 0.01
+  frontAdjust = getPitchBias()
+  rearAdjust = - getPitchBias()
   print(frontAdjust, rearAdjust)
   # leftAdjust = getRollBias() * 0.01
   # rightAdjust = - getRollBias() * 0.01

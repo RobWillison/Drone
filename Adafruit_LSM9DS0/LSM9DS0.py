@@ -31,7 +31,7 @@ import math
 LSM9DS0_MAG_ADDRESS     = 0x1D
 LSM9DS0_ACCEL_ADDRESS	= 0x1D
 LSM9DS0_GYRO_ADDRESS    = 0x6B
-                                                                                
+
 # LSM9DS0 gyrometer registers
 LSM9DS0_WHO_AM_I_G      = 0x0F
 LSM9DS0_CTRL_REG1_G     = 0x20
@@ -101,7 +101,7 @@ LSM9DS0_ACCELRANGE_4G                = 0b001 << 3
 LSM9DS0_ACCELRANGE_6G                = 0b010 << 3
 LSM9DS0_ACCELRANGE_8G                = 0b011 << 3
 LSM9DS0_ACCELRANGE_16G               = 0b100 << 3
- 
+
 LSM9DS0_ACCELDATARATE_POWERDOWN      = 0b0000 << 4
 LSM9DS0_ACCELDATARATE_3_125HZ        = 0b0001 << 4
 LSM9DS0_ACCELDATARATE_6_25HZ         = 0b0010 << 4
@@ -113,7 +113,7 @@ LSM9DS0_ACCELDATARATE_200HZ          = 0b0111 << 4
 LSM9DS0_ACCELDATARATE_400HZ          = 0b1000 << 4
 LSM9DS0_ACCELDATARATE_800HZ          = 0b1001 << 4
 LSM9DS0_ACCELDATARATE_1600HZ         = 0b1010 << 4
- 
+
 LSM9DS0_MAGGAIN_2GAUSS               = 0b00 << 5
 LSM9DS0_MAGGAIN_4GAUSS               = 0b01 << 5
 LSM9DS0_MAGGAIN_8GAUSS               = 0b10 << 5
@@ -148,7 +148,7 @@ class LSM9DS0(object):
         # names for clarity.
         self.mag    = I2C.get_i2c_device(mag_address, busnum)
         self.accel  = I2C.get_i2c_device(accel_address, busnum)
-        self.gyro   = I2C.get_i2c_device(gyro_address, busnum)
+        # self.gyro   = I2C.get_i2c_device(gyro_address, busnum)
 
         # Magnetometer initialisation
         self.mag.write8(LSM9DS0_CTRL_REG5_XM, 0b11110000) # Temperature sensor enabled, high res mag, 50Hz
@@ -160,8 +160,8 @@ class LSM9DS0(object):
         self.accel.write8(LSM9DS0_CTRL_REG2_XM, 0b00100000) # +/- 16 g
 
         # Gyro initialisation
-        self.gyro.write8(LSM9DS0_CTRL_REG1_G, 0b00001111) # Normal power mode, XYZ enabled
-        self.gyro.write8(LSM9DS0_CTRL_REG4_G, 0b00110000) # Continuous update, 2000 dps
+        # self.gyro.write8(LSM9DS0_CTRL_REG1_G, 0b00001111) # Normal power mode, XYZ enabled
+        # self.gyro.write8(LSM9DS0_CTRL_REG4_G, 0b00110000) # Continuous update, 2000 dps
 
     def readLowHigh(self, i2c_device, lowhigh):
         """Returns signed integer value by reading the given sensor's low and high
@@ -188,11 +188,11 @@ class LSM9DS0(object):
                self.readLowHigh(i2c_device, xyz_lh[2]))  # Pass z
 
         return xyz
-    
-    def readGyro(self):
-        """Return gyroscope (x, y, z) tuple"""
 
-        return self.readSensor(self.gyro, LSM9DS0_OUT_XYZ_LH_G)
+    # def readGyro(self):
+    #     """Return gyroscope (x, y, z) tuple"""
+    #
+    #     return self.readSensor(self.gyro, LSM9DS0_OUT_XYZ_LH_G)
 
     def readMag(self):
         """Return magnetometer (x, y, z) tuple"""
