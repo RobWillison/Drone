@@ -3,6 +3,7 @@ import MotorDrive
 from time import sleep
 import math
 import PID
+import redis
 
 MotorDrive.setup()
 
@@ -17,6 +18,8 @@ fXg = 0
 fYg = 0
 fZg = 0
 alpha = 0.5
+
+redisClient = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 def filterAccel():
   global fXg
@@ -34,6 +37,7 @@ def pitch():
   Xg, Yg, Zg = filterAccel()
 
   pitch = math.atan2(Xg, math.sqrt(Yg**2 + Zg**2))
+  redisClient.set('pitch', str(math.degrees(pitch)))
   global pitchCalibration
   return math.degrees(pitch) - pitchCalibration
 
@@ -70,18 +74,18 @@ pitchCalibration = 0
 rollCalibration = roll()
 pitchCalibration = pitch()
 
-pitchPID = PID.PID(0.01, 0.01, 0.01)
+pitchPID = PID.PID(0.5, 0.01, 0.01)
 pitchPID.SetPoint=0.0
 pitchPID.setSampleTime(0.0001)
 
-rollPID = PID.PID(0.01, 0.01, 0.01)
+rollPID = PID.PID(0.5, 0.01, 0.01)
 rollPID.SetPoint=0.0
 rollPID.setSampleTime(0.0001)
 
 while(True):
-  frontAdjust = getPitchBias()
+  # frontAdjust = getPitchBias()
   rearAdjust = - getPitchBias()
-  print(frontAdjust, rearAdjust)
+  print(rearAdjust)
   # leftAdjust = getRollBias() * 0.01
   # rightAdjust = - getRollBias() * 0.01
 
