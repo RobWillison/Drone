@@ -7,11 +7,11 @@ import redis
 
 MotorDrive.setup()
 
-mFrontLeft = MotorDrive.MOTOR1
+mFrontLeft = MotorDrive.MOTOR4
 mFrontRight = MotorDrive.MOTOR2
-mBackLeft = MotorDrive.MOTOR3
-mBackRight = MotorDrive.MOTOR4
-
+mBackLeft = MotorDrive.MOTOR41
+mBackRight = MotorDrive.MOTOR3
+motorTrim = [0, 50, 0, 0]
 imu = Adafruit_LSM9DS0.LSM9DS0()
 
 fXg = 0
@@ -20,6 +20,14 @@ fZg = 0
 alpha = 0.5
 
 redisClient = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+def clamp(n, minn, maxn):
+  if n < minn:
+    return minn
+  elif n > maxn:
+    return maxn
+  else:
+    return n
 
 def filterAccel():
   global fXg
@@ -38,15 +46,13 @@ def pitch():
 
   pitch = math.atan2(Xg, math.sqrt(Yg**2 + Zg**2))
   redisClient.set('pitch', str(math.degrees(pitch)))
-  global pitchCalibration
-  return math.degrees(pitch) - pitchCalibration
+  return math.degrees(pitch)
 
 def roll():
   Xg, Yg, Zg = filterAccel()
 
   roll = math.atan2(-Yg, Zg)
-  global rollCalibration
-  return math.degrees(roll) - rollCalibration
+  return math.degrees(roll)
 
 def setMotor(motor, value):
   if value <= 0:
@@ -58,6 +64,7 @@ def setMotor(motor, value):
 
 def getPitchBias():
     error = pitch()
+
     pitchPID.update(error)
 
     return pitchPID.output
@@ -68,13 +75,8 @@ def getRollBias():
 
     return rollPID.output
 
-throttle = 50
-rollCalibration = 0
-pitchCalibration = 0
-rollCalibration = roll()
-pitchCalibration = pitch()
-
-pitchPID = PID.PID(0.5, 0.01, 0.01)
+throttle = 30
+pitchPID = PID.PID(0.2, 0, 0)
 pitchPID.SetPoint=0.0
 pitchPID.setSampleTime(0.0001)
 
@@ -83,16 +85,15 @@ rollPID.SetPoint=0.0
 rollPID.setSampleTime(0.0001)
 
 while(True):
-  # frontAdjust = getPitchBias()
-  rearAdjust = - getPitchBias()
-  print(rearAdjust)
+  pitchAdjust = clamp(- getPitchBias(), -100, 100)
+  print(pitchAdjust)
   # leftAdjust = getRollBias() * 0.01
   # rightAdjust = - getRollBias() * 0.01
 
-  # MotorDrive.setMotorValue(mFrontLeft, throttle + frontAdjust + leftAdjust)
-  # MotorDrive.setMotorValue(mFrontRight, throttle + frontAdjust + rightAdjust)
-  #
-  # MotorDrive.setMotorValue(mBackLeft, throttle + rearAdjust + leftAdjust)
-  # MotorDrive.setMotorValue(mBackRight, throttle + rearAdjust + rightAdjust)
+  MotorDrive.setMotorValue(mFrontLeft, throttle + motorTrim[0] + pitchAdjust)
+  MotorDrive.setMotorValue(mFrontRight, throttle + motorTrim[1] + pitchAdjust)
 
-  sleep(0.0001)
+  MotorDrive.setMotorValue(mBackLeft, throttle + motorTrim[2] - pitchAdjust)
+  MotorDrive.setMotorValue(mBackRight, throttle + motorTrim[3] - pitchAdjust)
+
+  sleep(0.0001)                                                                                                                                                                                              61        1,1           To
